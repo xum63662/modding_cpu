@@ -1,0 +1,99 @@
+$date
+	Sun Mar 30 14:16:07 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module pipeline_add_tb $end
+$var wire 32 ! result [31:0] $end
+$var reg 1 " clk $end
+$var reg 32 # operand1 [31:0] $end
+$var reg 32 $ operand2 [31:0] $end
+$scope module uut $end
+$var wire 1 " clk $end
+$var wire 32 % operand1 [31:0] $end
+$var wire 32 & operand2 [31:0] $end
+$var reg 32 ' EX_MEM [31:0] $end
+$var reg 32 ( ID_EX [31:0] $end
+$var reg 32 ) IF_ID [31:0] $end
+$var reg 32 * MEM_WB [31:0] $end
+$var reg 32 + result [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+bx +
+bx *
+bx )
+bx (
+bx '
+b1010 &
+b1111 %
+b1010 $
+b1111 #
+0"
+bx !
+$end
+#5000
+b11001 )
+1"
+#10000
+0"
+#15000
+b11001 (
+1"
+#20000
+0"
+#25000
+b11001 '
+1"
+#30000
+0"
+#35000
+b11001 *
+1"
+#40000
+0"
+#45000
+b11001 !
+b11001 +
+1"
+#50000
+0"
+b11110 $
+b11110 &
+b110010 #
+b110010 %
+#55000
+b1010000 )
+1"
+#60000
+0"
+#65000
+b1010000 (
+1"
+#70000
+0"
+#75000
+b1010000 '
+1"
+#80000
+0"
+#85000
+b1010000 *
+1"
+#90000
+0"
+#95000
+b1010000 !
+b1010000 +
+1"
+#100000
+0"
