@@ -1,3 +1,5 @@
+# RC RL CPU 專題
+
 這裡是放研究的東西
 還沒整理好
 
@@ -5,82 +7,113 @@
 
 目前暫時把RC充放電用C寫出來了
 
-view.py是可以把test.txt<--RC充電
-              test2.txt<--RC放電
+ ### 寫C:
+
+- [x] RC充電
+- [x] RC放電
+- [ ] RL充電
+- [ ] RL放電
+
+CPU:
+目前沒有東西
+
+
+view.py是可以把C產出來的兩個
+    
+    test.txt<--RC充電
+    test2.txt<--RC放電
+
 劃出圖表
 
-R電阻取值=1k歐姆
-C電容取值=47微法拉
-V電壓取值=5伏特
+| R  | C  | V  | L |
+|:--:|:--:|:--:|:--:|
+| 1kΩ | 47μ| 5V | 30mH|
 
-----筆記---
+
+* * *
+筆記
+===
+
 RC 充電
+---
 
-^是成指數
+### e(自然指數) = 2.71828
 
-e(自然指數) = 2.71828
 
-t = R*C
+| Vc | VR | I | t |
+|:--:|:--:|:--:|:--:|
+|電容電壓|電阻電壓|電流|時間常數
 
-t = 0:
+$$t=RC$$
+
+### **t = 0:**
+$$Vc(0) = 0$$
     Vc(0)(電容電壓) = 0
     VR(0)(電阻電壓) = V
     I(0)(電容充電電流) = V/R
-0<t<5t:
-    Vc(t) = V*(1-e^-t/(R*C))
-    VR(t) = V+e^-t/(R*C)
-    I(t)  = (V/R)*(e^-t/(R*C))
-t>=5t:
-    Vc(5t) = V
-    VR(5t) = 0
-    I(5t)  = 0
+### **0<t<5t:**
+$$Vc(t) = V\times(1-e^\frac{-t}{RC})$$
+$$VR(t) = V\times e^\frac{-t}{RC}$$
+$$I(t) = \frac{V}{R}\times e^\frac{-t}{RC}$$
+### **t>=5t:**
+$$Vc(5t) = V$$
+$$VR(5t) = 0$$
+$$I(5t)  = 0$$
+    
 
-RC放電
+## RC放電
 
-t = 0:
-    Vc(0) = V
-    VR(0) = -V
-    I(0)  = -V/R
+### **t = 0:**
+$$Vc(0) = V$$
+$$VR(0) = -V$$
+$$I(0)  = -\frac{V}{R}$$
+    
 
-0<t<5t:
-    Vc(t) = V*(e^-t/(R*C))
-    VR(t) = -V*(e^-t/(R*C))
-    I(t)  = -(V/R)*(e^t/(R*C))
+### **0<t<5t:**
+$$Vc(t) = V\times e^{\frac{-t}{RC}}$$
+$$VR(t) = -V\times e^{\frac{-t}{RC}}$$
+$$I(t) = -\frac{V}{R}\times e^{\frac{-t}{RC}}$$
 
-t>=5t:
-    Vc(5t) = 0
-    VR(5t) = 0
-    I(5t)  = 0
+### **t>=5t:**
+$$Vc(5t) = 0$$
+$$VR(5t) = 0$$
+$$I(5t)  = 0$$
+## RL充電
 
 
-RL充電
 
-t = L/R
+| VL | VR | I | t |
+|:--:|:--:|:--:|:--:|
+| 電感電壓 |電阻電壓|電感充電電流|時間常數|
 
-t = 0:
-    VL(0)(電感電壓) = V
-    VR(0) = 0
-    I(0)  = 0
-0<t<5t:
-    VL(t) = V*(e^-t/(L/R))
-    VR(t) = V*(1-(e^-t/(L/R)))
-    I(t)  = (V/R)*(1-(e^-t/(L/R)))
-t>=5t:
-    VL(5t) = V*(e^-5)
-    VR(5t) = V*(1-e^-5)
-    I(5t)  = (V/R)*(1-e^-5)
+$$t = \frac{L}{R}$$
 
-RL放電
+### **t = 0:**
+$$VL(0) = V$$
+$$VR(0) = 0$$
+$$I(0) = 0$$
+### **0<t<5t:**
+$$VL(t) = V\times e^{\frac{-t}{L/R}}$$
+$$VR(t) = V\times(1-e^{\frac{-t}{L/R}})$$
+$$I(t) = \frac{V}{R}\times(1-e^{\frac{-t}{L/R}})$$
+### **t>=5t:**
+$$VL(5t) = V \times e^{-5} \approx 0$$
+$$VR(5t) = V \times (1-e^{-5}) \approx V$$
+$$I(5t) = \frac{V}{R}\times(1-e^{-5})$$
+## RL放電
 
-t = 0:
-    VL(0) = -V
-    VR(0) = V
-    I(0)  = V/R
-0<t<5t:
-    VL(t) = -V*(e^-t/(L/R))
-    VR(t) = V*(e^-t/(L/R))
-    I(t)  = (V/R)*(e^-t/(L/R))
-t>=5t:
-    VL(5t) = 0
-    VR(5t) = 0
-    I(5t)  = 0
+### **t = 0:**
+$$VL(0) = -V$$
+$$VR(0) = V$$
+$$I(0)  = \frac{V}{R}$$
+
+### **0<t<5t:**
+$$VL(t) = -V\times e^\frac{-t}{ L/R}$$ 
+$$VR(t) = V\times e^\frac{-t}{ L/R}$$ 
+$$I(t)  = \frac{V}{R}\times e^\frac{-t}{ L/R}$$
+    
+### **t>=5t:**
+$$VL(5t) = 0$$
+$$VR(5t) = 0$$
+$$ I(5t) = 0 $$
+
