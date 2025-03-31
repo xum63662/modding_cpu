@@ -15,7 +15,7 @@ const float e = 2.71828;
 void RC_up(float);
 void RC_down(float);
 int main(){
-    fp = fopen("C:\\Users\\Jessica\\Desktop\\verilog\\modding_cpu\\C\\test.txt","w+");
+    fp = fopen("test.txt","w+");
     t = R * C;
     five_t = 5 * t;    
     float i=0,j=0;
@@ -28,7 +28,7 @@ int main(){
         i = i+JUMP;
     }
     fclose(fp);
-    fp = fopen("C:\\Users\\Jessica\\Desktop\\verilog\\modding_cpu\\C\\test2.txt","w+");
+    fp = fopen("test2.txt","w+");
     count = 0;
     while(1){//RC 放電
         RC_down(j);
@@ -39,7 +39,6 @@ int main(){
         j+=JUMP;
     }
     fclose(fp);
-    system("python view.py");
     return 1;
 }
 
