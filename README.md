@@ -18,15 +18,22 @@ CPU:
 目前沒有東西
 
 
-view.py是可以把C產出來的兩個
+### [view.py](<https://github.com/xum63662/modding_cpu/blob/main/C_Lang/view.py>) 
+
+是可以把C產出來的兩個
     
     test.txt<--RC充電
     test2.txt<--RC放電
 
-劃出圖表
+劃出圖表(需要matplotlib)
 
 目前可以顯示RC充電線,最高點
 以及RC放電線，最低點
+
+### [main.py](<https://github.com/xum63662/modding_cpu/blob/main/main.py>)
+是一個GUI介面 可以輸出數值 目前還沒完全做好 目前打算做好內加編譯器(或者外加做一個)
+
+這個需要PyQt5
 
 ## 取值
 
