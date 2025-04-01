@@ -1,12 +1,35 @@
 import matplotlib.pyplot as plt
+from matplotlib.backend_bases import FigureCanvasBase
+from PyQt5.QtWidgets import QApplication,QDesktopWidget
 import numpy as np
-import os
+import os,sys,math
+from decimal import Decimal,ROUND_CEILING
+
+app = QApplication(sys.argv)
+
+def on_clse(event):
+    print("已關閉視窗")
+    sys.exit(app.exec_())
+
+
+
+
+screen = QDesktopWidget().screenGeometry()
+
+screen_width = screen.width()
+screen_height = screen.height()
+
+window_width = screen_width // 2
+window_height = screen_height // 2
+
+偏移 = 20
 
 plt.rcParams['font.sans-serif'] = ['STFangsong']
 plt.rcParams['axes.unicode_minus'] = False
 
 
 plt.ion()
+plt.switch_backend("Qt5Agg")
 
 RC_up_point = 0
 RC_down_point = 0
@@ -21,17 +44,62 @@ x1 = []
 y1 = []
 x2 = []
 y2 = []
+L1,L2 = 1,1
 
 fig1,ax1 = plt.subplots()
+ax1.set_title("RC充電")
 fig2,ax2 = plt.subplots()
+ax2.set_title("RC放電")
+
+manager1 = fig1.canvas.manager
+manager1.window.setGeometry(0, 0+偏移, window_width-2, window_height-偏移)
+manager2 = fig2.canvas.manager
+manager2.window.setGeometry(screen_width - window_width, 0+偏移, window_width, window_height-偏移)
+
+canvas1 = fig1.canvas
+canvas1.mpl_connect("close_event",on_clse)
+canvas2 = fig2.canvas
+canvas2.mpl_connect("close_event",on_clse)
 
 raw_line1 = f1.readlines()
 raw_line2 = f2.readlines()
 f1.close()
 f2.close()
+
+
+temp_char = raw_line1[len(raw_line1)-1].split(',')
+temp_float = Decimal(temp_char[0])
+if Decimal('1000') >= temp_float or temp_float > Decimal('1'):
+    L1 = Decimal('1') ** Decimal('-3')
+    ax1.set_xlabel("Time(s)/1000")
+if Decimal('1') >= temp_float or temp_float > Decimal('0.001'):
+    L1 = Decimal('10') ** Decimal('0')
+    ax1.set_xlabel("Time(s)")
+if Decimal('0.001') >= temp_float or temp_float > Decimal('0.000001'):
+    L1 = Decimal('10') ** Decimal('3')
+    ax1.set_xlabel("Time(ms)")
+if Decimal('0.000001') >= temp_float or temp_float > Decimal('0.000000001'):
+    L1 = Decimal('10') ** Decimal('6')
+    ax1.set_xlabel("Time(μs)")
+
+temp_char = raw_line2[0].split(',')
+temp_float = Decimal(temp_char[0])
+if Decimal('1000') >= temp_float or temp_float > Decimal('1'):
+    L2 = Decimal('1') ** Decimal('-3')
+    ax2.set_xlabel("Time(s)/1000")
+if Decimal('1') >= temp_float or temp_float > Decimal('0.001'):
+    L2 = Decimal('10') ** Decimal('0')
+    ax2.set_xlabel("Time(s)")
+if Decimal('0.001') >= temp_float or temp_float > Decimal('0.000001'):
+    L2 = Decimal('10') ** Decimal('3')
+    ax2.set_xlabel("Time(ms)")
+if Decimal('0.000001') >= temp_float or temp_float > Decimal('0.000000001'):
+    L2 = Decimal('10') ** Decimal('6')
+    ax2.set_xlabel("Time(μs)")
+
 for i in raw_line1:
     arr = i.split(',')
-    x1.append(float(arr[0]))
+    x1.append(float(Decimal(arr[0]) * L1))
     temp = float(arr[1].replace('\n',''))
     y1.append(temp)
     if(len(y1)>2):
@@ -41,7 +109,7 @@ for i in raw_line1:
             RC_up_point+=1        
 for i in raw_line2:
     arr = i.split(',')
-    x2.append(float(arr[0]))
+    x2.append(float(Decimal(arr[0]) * L2))
     temp = float(arr[1].replace('\n',''))
     y2.append(temp)
     if(len(y2)>2):
@@ -59,12 +127,14 @@ ax1.legend(loc="lower right")
 ax2.legend(loc="upper right")
 graph1.set_ydata(y1)
 graph2.set_ydata(y2)
-ax1.set_yticks(np.linspace(0,y1[len(y1)-1],10))
-ax1.set_xticks(np.linspace(0,x1[len(x1)-1],15))
-ax2.set_yticks(np.linspace(0,y2[0],10))
-ax2.set_xticks(np.linspace(0,x2[len(x2)-1],15))
+ax1.set_yticks(np.linspace(0,math.ceil(y1[len(y1)-1]),math.ceil(y1[len(y1)-1])+1))
+ax1.set_xticks(np.linspace(0,int(Decimal(x1[len(x1)-1]).quantize(Decimal('1'),rounding=ROUND_CEILING)),15))
+ax2.set_yticks(np.linspace(0,math.ceil(y2[0]),math.ceil(y1[len(y1)-1])+1))
+ax2.set_xticks(np.linspace(0,int(Decimal(x2[len(x2)-1]).quantize(Decimal('1'), rounding=ROUND_CEILING)),15))
 ax1.set_ylim(0,y1[len(y1)-1]+0.3)
 ax2.set_ylim(-0.3,y1[len(y1)-1]+0.3)
+ax1.set_xlim(0,int(Decimal(x1[len(x1)-1]).quantize(Decimal('1'),rounding=ROUND_CEILING)))
+ax2.set_xlim(0,int(Decimal(x2[len(x2)-1]).quantize(Decimal('1'), rounding=ROUND_CEILING)))
 plt.draw()
 plt.pause(2)
 
@@ -82,9 +152,40 @@ while(1):
     raw_line2 = f2.readlines()
     f1.close()
     f2.close()
+    temp_char = raw_line1[len(raw_line1)-1].split(',')
+    temp_float = Decimal(temp_char[0])
+    if Decimal('1000') >= temp_float or temp_float > Decimal('1'):
+        L1 = Decimal('1') ** Decimal('-3')
+        ax1.set_xlabel("Time(s)/1000")
+    if Decimal('1') >= temp_float or temp_float > Decimal('0.001'):
+        L1 = Decimal('10') ** Decimal('0')
+        ax1.set_xlabel("Time(s)")
+    if Decimal('0.001') >= temp_float or temp_float > Decimal('0.000001'):
+        L1 = Decimal('10') ** Decimal('3')
+        ax1.set_xlabel("Time(ms)")
+    if Decimal('0.000001') >= temp_float or temp_float > Decimal('0.000000001'):
+        L1 = Decimal('10') ** Decimal('6')
+        ax1.set_xlabel("Time(μs)")
+
+    temp_char = raw_line2[0].split(',')
+    temp_float = Decimal(temp_char[0])
+    if Decimal('1000') >= temp_float or temp_float > Decimal('1'):
+        L2 = Decimal('1') ** Decimal('-3')
+        ax2.set_xlabel("Time(s)/1000")
+    if Decimal('1') >= temp_float or temp_float > Decimal('0.001'):
+        L2 = Decimal('10') ** Decimal('0')
+        ax2.set_xlabel("Time(s)")
+    if Decimal('0.001') >= temp_float or temp_float > Decimal('0.000001'):
+        L2 = Decimal('10') ** Decimal('3')
+        ax2.set_xlabel("Time(ms)")
+    if Decimal('0.000001') >= temp_float or temp_float > Decimal('0.000000001'):
+        L2 = Decimal('10') ** Decimal('6')
+        ax2.set_xlabel("Time(μs)")
+
+
     for i in raw_line1:
         arr = i.split(',')
-        x1.append(float(arr[0]))
+        x1.append(float(Decimal(arr[0]) * L1))
         temp = float(arr[1].replace('\n',''))
         y1.append(temp)
         if(len(y1)>2):
@@ -96,7 +197,7 @@ while(1):
                 RC_up_point+=1        
     for i in raw_line2:
         arr = i.split(',')
-        x2.append(float(arr[0]))
+        x2.append(float(Decimal(arr[0]) * L2))
         temp = float(arr[1].replace('\n',''))
         y2.append(temp)
         if(len(y2)>2):
@@ -107,17 +208,16 @@ while(1):
                 RC_ax_line_down.set_ydata([-0.3,temp])
                 RC_down_point+=1
 
+    print(int(Decimal(x1[len(x1)-1]).quantize(Decimal('1'),rounding=ROUND_CEILING)))
     graph1.set_ydata(y1)
     graph2.set_ydata(y2)
-    ax1.set_yticks(np.linspace(0,y1[len(y1)-1],10))
-    ax1.set_xticks(np.linspace(0,x1[len(x1)-1],15))
-    ax2.set_yticks(np.linspace(0,y2[0],10))
-    ax2.set_xticks(np.linspace(0,x2[len(x2)-1],15))
+    ax1.set_yticks(np.linspace(0,math.ceil(y1[len(y1)-1]),math.ceil(y1[len(y1)-1])+1))
+    ax1.set_xticks(np.linspace(0,int(Decimal(x1[len(x1)-1]).quantize(Decimal('1'),rounding=ROUND_CEILING)),15))
+    ax2.set_yticks(np.linspace(0,math.ceil(y2[0]),math.ceil(y1[len(y1)-1])+1))
+    ax2.set_xticks(np.linspace(0,int(Decimal(x2[len(x2)-1]).quantize(Decimal('1'), rounding=ROUND_CEILING)),15))
     ax1.set_ylim(0,y1[len(y1)-1]+0.3)
     ax2.set_ylim(-0.3,y1[len(y1)-1]+0.3)
+    ax1.set_xlim(0,int(Decimal(x1[len(x1)-1]).quantize(Decimal('1'),rounding=ROUND_CEILING)))
+    ax2.set_xlim(0,int(Decimal(x2[len(x2)-1]).quantize(Decimal('1'), rounding=ROUND_CEILING)))
     plt.draw()
     plt.pause(2)
-    if not plt.fignum_exists(fig1.number) :
-        os._exit(1)
-    elif not plt.fignum_exists(fig2.number):
-        os._exit(1)

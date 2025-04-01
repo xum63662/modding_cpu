@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets,QtGui
-import sys,re
+import sys,re,os
 from decimal import Decimal
 import numpy as np
 
@@ -30,56 +30,56 @@ def check():
     match R_a:
         case "mΩ":
             buf = buf + R + "mΩ" + "  "
-            buf2 = buf2 + format(Decimal(R)*m,'.3f') + ","
+            buf2 = buf2 + format(Decimal(R)*m,'.3f') + "\n"
         case "Ω":
             buf = buf + R + "Ω" + "  "
-            buf2 = buf2 + R + ","
+            buf2 = buf2 + R + "\n"
         case "kΩ":
             buf = buf + R + "kΩ" + "  "   
-            buf2 = buf2 + str(int(R)*pow(10,3)) + ","
+            buf2 = buf2 + str(int(R)*pow(10,3)) + "\n"
         case "MΩ":
             buf = buf + R + "MΩ" + "  "
-            buf2 = buf2 + str(int(R)*pow(10,6)) + ","
+            buf2 = buf2 + str(int(R)*pow(10,6)) + "\n"
     match C_a:
         case "pF":
             buf = buf + C + "pF" + "  "
-            buf2 = buf2 + format(Decimal(C)*p, '.12f') + ","
+            buf2 = buf2 + format(Decimal(C)*p, '.12f') + "\n"
         case "nF":
             buf = buf + C + "nF" + "  "
-            buf2 = buf2 + format(Decimal(C)*n, '.9f') + ","
+            buf2 = buf2 + format(Decimal(C)*n, '.9f') + "\n"
         case "μF":
             buf = buf + C + "μF" + "  "
-            buf2 = buf2 + format(Decimal(C)*u, '.6f') + ","
+            buf2 = buf2 + format(Decimal(C)*u, '.6f') + "\n"
         case "mF":
             buf = buf + C + "mF" + "  "
-            buf2 = buf2 + format(Decimal(C)*m, '.3f') + ","
+            buf2 = buf2 + format(Decimal(C)*m, '.3f') + "\n"
         case "F":
             buf = buf + C + "F" + "  "
-            buf2 = buf2 + C + ","
+            buf2 = buf2 + C + "\n"
     match L_a:
         case "nH":
             buf = buf + L + "nH" + "  "
-            buf2 = buf2 + format(Decimal(L)*n, '.9f') + ","
+            buf2 = buf2 + format(Decimal(L)*n, '.9f') + "\n"
         case "μH":
             buf = buf + L + "μH" + "  "
-            buf2 = buf2 + format(Decimal(L)*u, '.6f') + ","
+            buf2 = buf2 + format(Decimal(L)*u, '.6f') + "\n"
         case "mH":
             buf = buf + L + "mH" + "  "
-            buf2 = buf2 + format(Decimal(L)*m, '.3f') + ","
+            buf2 = buf2 + format(Decimal(L)*m, '.3f') + "\n"
         case "H":
             buf = buf + L + "H" + "  "
-            buf2 = buf2 + L + ","
+            buf2 = buf2 + L + "\n"
     match V_a:
         case "mV":
             buf = buf + V + "mV" 
-            buf2 = buf2 + format(Decimal(V)*m, '.3f')
+            buf2 = buf2 + format(Decimal(V)*m, '.3f') + "\n"
         case "V":
             buf = buf + V + "V" 
-            buf2 = buf2 + V
+            buf2 = buf2 + V + "\n"
         case "kV":
             buf = buf + V + "kV" 
-            buf2 = buf2 + str(float(V)*pow(10,3))
-
+            buf2 = buf2 + str(float(V)*pow(10,3)) + "\n"
+ 
     mbox = QtWidgets.QMessageBox(From)
     mbox.setText("確認以下規格:\n"+buf)
     mbox.addButton("確定",0)
@@ -91,6 +91,8 @@ def check():
         file.write(buf2)
         file.flush()
         file.close()
+        path = os.getcwd()
+        os.system("C_Lang\\test.exe "+ path)
 
 def all_number(s):
     return bool(re.match(r'^\d+$',s))
@@ -122,6 +124,7 @@ Label1 = QtWidgets.QLabel(From)
 Label2 = QtWidgets.QLabel(From)
 Label3 = QtWidgets.QLabel(From)
 Label4 = QtWidgets.QLabel(From)
+Label5 = QtWidgets.QLabel(From)
 
 Label1.setGeometry(55,int(height/2)-50,100,50)
 Label1.setFont(Label_font)
@@ -139,6 +142,12 @@ Label3.setText("電感(L)")
 Label4.setGeometry(465,int(height/2)-50,100,50)
 Label4.setFont(Label_font)
 Label4.setText("電壓(V)")
+
+Label5.setGeometry(width//3+30,height//4,200,50)
+Main_Label_Font = QtGui.QFont()
+Main_Label_Font.setPointSize(25)
+Label5.setFont(Main_Label_Font)
+Label5.setText("輸入數值")
 
 
 #輸入欄
@@ -158,10 +167,6 @@ input1.textChanged.connect(check2)
 input2.textChanged.connect(check2)
 input3.textChanged.connect(check2)
 input4.textChanged.connect(check2)
-
-output1 = QtWidgets.QLineEdit(From)
-output1.setGeometry(int(width/2)-90,100,200,20)
-output1.setReadOnly(True)
 
 
 #下拉欄
@@ -206,6 +211,22 @@ button1.setStyleSheet('''
 ''')
 
 button1.clicked.connect(check)
+
+def click_2():
+    path = os.getcwd() + "\\C_Lang\\"
+    os.system("gcc -o " + path + "test.exe " + path + "test.c") 
+
+button2 = QtWidgets.QPushButton(From)
+button2.setGeometry(int(width/2)+100,int(height/2)+100,150,40)
+button2.setText("test.exe重新編譯")
+button2.clicked.connect(click_2)
+button2.setStyleSheet('''
+    QPushButton{
+        font-size:20px;
+    }
+
+''')
+
 From.show()
 sys.exit(app.exec_())
 
