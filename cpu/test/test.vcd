@@ -1,0 +1,104 @@
+$date
+	Sun Apr 06 15:49:28 2025
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module ALU $end
+$var wire 64 ! A [63:0] $end
+$var wire 64 " B [63:0] $end
+$var wire 4 # mode [3:0] $end
+$var reg 1 $ NF $end
+$var reg 1 % ZeroFlag $end
+$var reg 64 & out [63:0] $end
+$upscope $end
+$scope module tb $end
+$var wire 32 ' Y [31:0] $end
+$var reg 32 ( A [31:0] $end
+$var reg 32 ) B [31:0] $end
+$var reg 4 * mode [3:0] $end
+$scope module floatFPU $end
+$var wire 32 + A [31:0] $end
+$var wire 32 , B [31:0] $end
+$var wire 1 - NF $end
+$var wire 1 . ZF $end
+$var wire 4 / mode [3:0] $end
+$var reg 64 0 ALU_A [63:0] $end
+$var reg 64 1 ALU_B [63:0] $end
+$var reg 64 2 ALU_out [63:0] $end
+$var reg 8 3 A_E [7:0] $end
+$var reg 24 4 A_F [23:0] $end
+$var reg 1 5 A_S $end
+$var reg 8 6 B_E [7:0] $end
+$var reg 24 7 B_F [23:0] $end
+$var reg 1 8 B_S $end
+$var reg 4 9 PB [3:0] $end
+$var reg 32 : Y [31:0] $end
+$var reg 8 ; out_E [7:0] $end
+$var reg 24 < out_F [23:0] $end
+$var reg 1 = out_S $end
+$var reg 4 > temp_DIV [3:0] $end
+$var integer 32 ? ALU_top [31:0] $end
+$var integer 32 @ A_point [31:0] $end
+$var integer 32 A B_point [31:0] $end
+$var integer 32 B B_top [31:0] $end
+$var integer 32 C check [31:0] $end
+$var integer 32 D i [31:0] $end
+$var integer 32 E offset [31:0] $end
+$var integer 32 F total_point [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+bx F
+b1010 E
+b1010 D
+bx C
+bx B
+bx A
+bx @
+bx ?
+bx >
+x=
+bx <
+b10000 ;
+bx :
+b0 9
+08
+b11001000000000 7
+b110 6
+05
+b110000110101000000000000 4
+b10000 3
+b110000110001111000000000 2
+bx 1
+bx 0
+b1 /
+z.
+z-
+b1000010110010000000000000000000 ,
+b1000111110000110101000000000000 +
+b1 *
+b1000010110010000000000000000000 )
+b1000111110000110101000000000000 (
+bx '
+b0 &
+0%
+0$
+bz #
+bz "
+bz !
+$end
+#1
+b1000111110000110001111000000000 '
+b1000111110000110001111000000000 :
+b10001111 ;
+b110000110001111000000000 <
+#50
